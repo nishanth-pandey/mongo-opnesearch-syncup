@@ -1,10 +1,13 @@
 import { Client } from "@opensearch-project/opensearch";
 
 const client = new Client({
-  node: process.env.OPENSEARCH_NODE,
+  node: process.env.OPENSEARCH_NODE.replace('/_dashboards', ''),
   auth: {
     username: process.env.OPENSEARCH_USER,
     password: process.env.OPENSEARCH_PASS,
+  },
+  ssl: {
+    rejectUnauthorized: false,
   },
 });
 

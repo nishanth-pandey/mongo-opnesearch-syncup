@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { env } from "./config/env.js";
-import { BulkWriter } from "./sync/bulkWriter.js";
+import { BulkWriter } from "./sync/bulkWritter.js";
 import { transformDocument } from "./sync/transform.js";
 
 async function run() {
@@ -11,7 +11,11 @@ async function run() {
 
   console.log(`Starting bulk sync for collection: ${collectionName}`);
 
-  const mongo = new MongoClient(env.mongoUri);
+  const mongo = new MongoClient(env.mongoUri, {
+  tls: true,
+  tlsAllowInvalidCertificates: true,  // Needed for DocumentDB
+  tlsAllowInvalidHostnames: true      // Needed for DocumentDB
+});
   await mongo.connect();
 
   const db = mongo.db(env.mongoDb);

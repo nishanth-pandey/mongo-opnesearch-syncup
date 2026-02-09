@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "bulk-sync": "node bulk/index.js",
+    "producer": "node realtime/producer/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@opensearch-project/opensearch": "^3.5.1",
     "dotenv": "^17.2.3",
-    "mongodb": "^7.0.0"
+    "mongodb": "^7.0.0",
+    "aws-sdk": "^2.1490.0"
   }
 }
