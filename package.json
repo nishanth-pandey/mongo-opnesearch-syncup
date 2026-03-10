@@ -6,16 +6,19 @@
   "scripts": {
     "bulk-sync": "node bulk/index.js",
     "producer": "node realtime/producer/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cricludo-backfill": "node bulk-cricludo/runBackfill.js",
+    "cricludo-delete-index": "node bulk-cricludo/deleteIndex.js",
+    "cricludo-create-index": "node bulk-cricludo/recreateIndex.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@opensearch-project/opensearch": "^3.5.1",
+    "aws-sdk": "^2.1490.0",
     "dotenv": "^17.2.3",
     "mongodb": "^7.0.0",
-    "aws-sdk": "^2.1490.0"
+    "mongoose": "^9.2.4"
   }
 }

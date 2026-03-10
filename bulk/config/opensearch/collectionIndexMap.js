@@ -9,7 +9,7 @@ export const collectionIndexMap = {
     // sports: "sports_v1",
     // sportbets: "sportbets_v1",
     // users: "users_v1",
-    casinodailysnapshots: "casinodailysnapshots_v1",
+    // casinodailysnapshots: "casinodailysnapshots_v1",
   },
   prod: {
     users: "users_prod",
