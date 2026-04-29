@@ -22,6 +22,9 @@ export async function syncUserProfiles(User) {
       isGuest: user.is_guest || false,
       vip_user: user.vip_user || false,
 
+      rating: user.rating ?? 0,
+      gamesJoined: user.gamesJoined ?? 0,
+
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
