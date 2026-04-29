@@ -19,6 +19,8 @@ export async function syncUserProfiles(User) {
       username: user.username,
       email: user.email,
       profilePic: user.profile_pic || "",
+      isGuest: user.is_guest || false,
+      vip_user: user.vip_user || false,
 
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
