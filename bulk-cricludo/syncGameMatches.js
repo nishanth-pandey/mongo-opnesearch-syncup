@@ -2,7 +2,7 @@ import { bulkInsert } from "./helpers.js";
 import { env } from "./config.js";
 
 export async function syncGameMatches(SettledGame) {
-  console.log("Syncing game matches...");
+  console.log("🔥 Syncing game_session_end events from SettledGame");
 
   const cursor = SettledGame.find().cursor();
 
@@ -10,36 +10,51 @@ export async function syncGameMatches(SettledGame) {
   let processed = 0;
 
   for await (const game of cursor) {
-    const doc = {
-      docId: `game_${game.roomId}`,
-      type: "game_match",
+    if (!game.players?.length) continue;
+    if (!game.result?.length) continue;
 
-      roomId: game.roomId,
+    for (const player of game.players) {
+      const userId = player.userId.toString();
 
-      gameType: game.gameType,
-      category: game.category,
+      const resultRow = game.result.find((r) => r.userId.toString() === userId);
 
-      entryValue: game.entryValue,
-      coinType: game.coinType,
+      if (!resultRow) continue;
 
-      players: game.players,
+      const isWin = resultRow.rank === 1;
 
-      winnerId: game.players?.find((p) => p.rank === 1)?.userId,
+      batch.push({
+        docId: `game_session_end_${game.roomId}_${userId}`,
+        type: "game_session_end",
 
-      startedAt: game.startedAt,
-      settledAt: game.settledAt,
-    };
+        userId,
+        roomId: game.roomId,
 
-    batch.push(doc);
-    processed++;
+        gameType: game.gameType,
+        category: game.category,
 
-    if (batch.length >= env.bulkSize) {
-      await bulkInsert(batch);
-      batch = [];
+        result: isWin, // ⭐ BOOLEAN ONLY
+
+        run: resultRow.run || 0,
+        wicket: resultRow.wicket || 0,
+        over: resultRow.over || 0,
+
+        entryValue: player.entryValue || 0,
+        coinType: player.coinType || "coin",
+
+        endedAt: game.settledAt,
+        timestamp: game.settledAt,
+      });
+
+      processed++;
+
+      if (batch.length >= env.bulkSize) {
+        await bulkInsert(batch);
+        batch = [];
+      }
     }
   }
 
   if (batch.length) await bulkInsert(batch);
 
-  console.log(`Game matches synced: ${processed}`);
+  console.log(`✅ Game session backfill done: ${processed}`);
 }
